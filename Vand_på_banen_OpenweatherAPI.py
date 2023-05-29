@@ -143,28 +143,27 @@ def calculate_wind(weather_data):
     return wind_speed
 
 def calculate_sunlight(weather_data):
-    # Implement your logic here to calculate sunlight based on the weather data.
-    # For this example, I'll return a default value of 5.
-    return 5
+    if weather_data is None:
+        return 0
+
+    if 'sys' in weather_data and 'sunrise' in weather_data['sys'] and 'sunset' in weather_data['sys']:
+        sunrise = weather_data['sys']['sunrise']
+        sunset = weather_data['sys']['sunset']
+        current_time = weather_data['dt']
+        if current_time < sunrise or current_time > sunset:
+            return 0
+        else:
+            daylight_seconds = sunset - sunrise
+            remaining_daylight = sunset - current_time
+            sunlight_percentage = remaining_daylight / daylight_seconds
+            return sunlight_percentage * 100
+
+    return 0
 
 
 drainage_time = time_until_playable(court_data)
 print(f" - The tennis court will be playable in {drainage_time} minutes.")
 
-#Determine how much rain is gonna make the courts not-playable. What is the least amount of rain that makes the court unplayable
-    #Conditions that affect the drainage of the courts, which are not already in the program:
-    #Shadows from trees and buildings, which will make the courts dry slower.
-    #Questions: Which condition affect the draiange of the courts the most? Of course amount of rainfall, is the most important. If it is always raining
-    #the courts can never get dry. Set boundaries, the calculation of how the courts are getting drained is not to be affected by human intervention.
-    #How big of an impact does the sun have? How big of an impact does the temperature have? 
-    #How much water have the courts recieved doing a longer period of time? How much water does the fundament below the tenniscourt contain?
-    #How can you determine humidity, amount of water below the tenniscourt surface? Through a lot of weatherdata from the previous months?
-    #This program should combine rasterdata and standard calculations to make a better estimate of the drainage
-    #Reduce time spent in-field at tenniscourts to determine whether a court is wet or not, time-demanding, but fun though. 
-    #Future ideas. Use weatherdata to calcuate when a tenniscourt will be playable tomorrow or not. Estimates so tennistrainers can plan their training accordingly.
-    #Make an automation that make apicalls every 5 min when the courts are playable. And start making API calls every one minute and 26 seconds when the courts needs to dry.
-    #Calculate the amount of water used in a regular watering off the court(when players water the court before playing) and add that to amount of water in the fundament. Get data from bookingsystem, and get an average of how often people is watering the court. Or get that data through a raspberry pi. 
-    #
 
 
 # In[ ]:
